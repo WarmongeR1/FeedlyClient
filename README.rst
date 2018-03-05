@@ -1,10 +1,10 @@
 python-feedly
 =============
 
-.. image:: https://pypip.in/v/python-feedly/badge.png
+.. image:: https://img.shields.io/pypi/v/python-feedly.svg
 	:target: https://pypi.python.org/pypi/python-feedly
 
-.. image:: https://pypip.in/d/python-feedly/badge.png
+.. image:: https://img.shields.io/pypi/dm/python-feedly.svg
 	:target: https://pypi.python.org/pypi/python-feedly
 
 
