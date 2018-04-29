@@ -164,6 +164,19 @@ class FeedlyClient(object):
                             headers=headers)
         return res
 
+    def mark_article_unsaved(self, access_token, entryIds):
+        headers = {'content-type': 'application/json',
+                   'Authorization': 'OAuth ' + access_token
+                   }
+        request_url = self._get_endpoint('v3/markers')
+        params = dict(
+            action="markAsUnsaved",
+            type="entries",
+            entryIds=entryIds,
+        )
+        res = requests.post(url=request_url, data=json.dumps(params), headers=headers)
+        return res    
+    
     def save_for_later(self, access_token, user_id, entryIds):
         """
         saved for later.entryIds is a list for entry id
@@ -184,7 +197,12 @@ class FeedlyClient(object):
                            data=json.dumps(params),
                            headers=headers)
         return res
-
+    
+    def get_entry_content(self, entryId):
+        request__url = self._get_endpoint("v3/entries/" + entryId)
+        res = requests.get(url=request__url)
+        return res.json()
+    
     def _get_endpoint(self, path=None):
         """
         :param path:
