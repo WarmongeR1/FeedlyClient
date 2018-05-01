@@ -202,6 +202,86 @@ class FeedlyClient(object):
         request__url = self._get_endpoint("v3/entries/" + entryId)
         res = requests.get(url=request__url)
         return res.json()
+        def get_categories(self, access_token):
+        """
+        Returns the user's categories
+        """
+        headers = {'Authorization': 'OAuth ' + access_token}
+        request__url = self._get_endpoint("v3/categories")
+        res = requests.get(url=request__url, headers=headers)
+        return res.json()
+
+    def get_sorted_categories(self,access_token):
+        """"
+        Returns the user's categories in the same order as they appear in Feedly
+        """
+        headers = {'Authorization': 'OAuth ' + access_token}
+        request__url = self._get_endpoint("v3/categories?sort=feedly")
+        res = requests.get(url=request__url, headers=headers)
+        return res.json()
+
+    def change_category_label(self, access_token, categoryId, categoryLabel):
+        """
+        Change the label of an existing category. categoryId should be URLencoded
+        """
+        headers = {'Authorization': 'OAuth ' + access_token}
+        request__url = self._get_endpoint("v3/categories/" + categoryId)
+        params = dict(
+            label=categoryLabel,
+        )
+        res = requests.post(url=request__url, data=json.dumps(params), headers=headers)
+        return res
+
+    def delete_category(self, access_token, categoryId):
+        """
+        Delete a category. Content will be moved to “global.uncategorized” category automatically. System categories cannot be deleted.
+        """
+        headers = {'Authorization': 'OAuth ' + access_token}
+        request__url = self._get_endpoint("v3/categories/" + categoryId)
+        res = requests.delete(url=request__url, headers=headers)
+        return res
+
+    def get_user_preferences(self, access_token):
+        """
+        Get the preferences of the user. Preferences are application specific.
+        Applications can not share preferences.
+        """
+        headers = {
+            'Authorization': 'OAuth ' + access_token
+        }
+        request__url = self._get_endpoint("v3/preferences")
+        res = requests.get(url=request__url, headers=headers)
+        return res.json()
+
+    def update_user_preferences(self, access_token, newprefs, newprefvalue):
+        """
+        Update the preferences of the user
+        """
+        headers = {
+            'content-type': 'application/json',
+            'Authorization': 'OAuth ' + access_token
+        }
+        request__url = self._get_endpoint("v3/preferences")
+        params = dict(
+            newprefs=newprefvalue,
+        )
+        res = requests.post(url=request__url, data=json.dumps(params), headers=headers)
+        return res
+
+    def delete_user_preference(self,acces_token), pref)
+        """
+        Delete a specific preference by assigning the special "==DELETE==" value.
+        """
+        headers = {
+            'content-type': 'application/json',
+            'Authorization': 'OAuth ' + access_token
+        }
+        request__url = self._get_endpoint("v3/preferences")
+        params = dict(
+            newprefs="==DELETE==",
+        )
+        res = requests.post(url=request__url, data=json.dumps(params), headers=headers)
+        return res
     
     def _get_endpoint(self, path=None):
         """
