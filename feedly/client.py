@@ -268,7 +268,7 @@ class FeedlyClient(object):
         res = requests.post(url=request__url, data=json.dumps(params), headers=headers)
         return res
 
-    def delete_user_preference(self,acces_token), pref)
+    def delete_user_preference(self,acces_token, pref)
         """
         Delete a specific preference by assigning the special "==DELETE==" value.
         """
