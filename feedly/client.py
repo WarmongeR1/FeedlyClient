@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+# For reference: https://developer.feedly.com/v3/
 
 import json
 
@@ -14,6 +15,7 @@ def json_fetch(url, method, params={}, data={}, headers={}):
 
 
 class FeedlyClient(object):
+    ## INIT
     def __init__(self, **options):
         self.client_id = options.get('client_id')
         self.client_secret = options.get('client_secret')
@@ -37,6 +39,8 @@ class FeedlyClient(object):
             'entries': '/v3/entries'
         }
 
+
+    ## USER PROFILE & SUBSCRIPTIONS
     def get_user_profile(self, access_token):
         """
         return user's profile
@@ -97,7 +101,7 @@ class FeedlyClient(object):
         res = requests.post(url=quest_url, params=params)
         return res.json()
 
-    def get_opml(self, access_token):
+    def get_user_subscriptions_opml(self, access_token):
         """
         return user subscriptions in opml format
         :param access_token:
@@ -113,6 +117,8 @@ class FeedlyClient(object):
         """
         return self.get_info_type(access_token, 'subscriptions')
 
+
+    ## FEEDS & ARTICLES
     def get_feed_content(self, access_token, streamId,
                          unreadOnly=None,
                          newerThan=None,
@@ -214,6 +220,8 @@ class FeedlyClient(object):
         res = requests.get(url=request__url, data=params, headers=headers)
         return res.json()
 
+
+    # Categories
     def get_categories(self, access_token):
         """
         Returns the user's categories 
@@ -253,6 +261,8 @@ class FeedlyClient(object):
         res = requests.delete(url=request__url, headers=headers)
         return res
 
+
+    # User preferences
     def get_user_preferences(self, access_token):
         """
         Get the preferences of the user. Preferences are application specific.
@@ -295,6 +305,8 @@ class FeedlyClient(object):
         res = requests.post(url=request__url, data=json.dumps(params), headers=headers)
         return res
     
+
+    ## GENERAL
     def _get_endpoint(self, path=None):
         """
         :param path:
@@ -304,7 +316,7 @@ class FeedlyClient(object):
         if path is not None:
             url += "/%s" % path
         return url
-
+    
     def _get_response(self, access_token, url_endpoint):
         headers = {'Authorization': 'OAuth ' + access_token}
         quest_url = self._get_endpoint(url_endpoint)
