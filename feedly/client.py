@@ -33,6 +33,8 @@ class FeedlyClient(object):
             'topics': '/v3/topics',
             'tags': '/v3/tags',
             'subscriptions': '/v3/subscriptions',
+            'markers': '/v3/markers',
+            'entries': '/v3/entries'
         }
 
     def get_user_profile(self, access_token):
@@ -202,9 +204,10 @@ class FeedlyClient(object):
         request__url = self._get_endpoint("v3/entries/" + entryId)
         res = requests.get(url=request__url)
         return res.json()
-        def get_categories(self, access_token):
+    
+    def get_categories(self, access_token):
         """
-        Returns the user's categories
+        Returns the user's categories 
         """
         headers = {'Authorization': 'OAuth ' + access_token}
         request__url = self._get_endpoint("v3/categories")
