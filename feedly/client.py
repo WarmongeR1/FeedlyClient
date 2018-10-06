@@ -205,6 +205,15 @@ class FeedlyClient(object):
         res = requests.get(url=request__url)
         return res.json()
     
+    def get_user_read(self, access_token, newerThan=None):
+        headers = {'Authorization': 'OAuth ' + access_token}
+        request__url = self._get_endpoint("v3/markers/reads")
+        params={}
+        if newerThan is not None:
+            params['newerThan'] = newerThan
+        res = requests.get(url=request__url, data=params, headers=headers)
+        return res.json()
+
     def get_categories(self, access_token):
         """
         Returns the user's categories 
@@ -215,7 +224,7 @@ class FeedlyClient(object):
         return res.json()
 
     def get_sorted_categories(self,access_token):
-        """"
+        """
         Returns the user's categories in the same order as they appear in Feedly
         """
         headers = {'Authorization': 'OAuth ' + access_token}
@@ -271,7 +280,7 @@ class FeedlyClient(object):
         res = requests.post(url=request__url, data=json.dumps(params), headers=headers)
         return res
 
-    def delete_user_preference(self, acces_token, pref):
+    def delete_user_preference(self, access_token, pref):
         """
         Delete a specific preference by assigning the special "==DELETE==" value.
         """
