@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+# For reference: https://developer.feedly.com/v3/
 
 import json
 
@@ -14,6 +15,7 @@ def json_fetch(url, method, params={}, data={}, headers={}):
 
 
 class FeedlyClient(object):
+    ## INIT
     def __init__(self, **options):
         self.client_id = options.get('client_id')
         self.client_secret = options.get('client_secret')
@@ -33,8 +35,12 @@ class FeedlyClient(object):
             'topics': '/v3/topics',
             'tags': '/v3/tags',
             'subscriptions': '/v3/subscriptions',
+            'markers': '/v3/markers',
+            'entries': '/v3/entries'
         }
 
+
+    ## USER PROFILE & SUBSCRIPTIONS
     def get_user_profile(self, access_token):
         """
         return user's profile
@@ -95,7 +101,7 @@ class FeedlyClient(object):
         res = requests.post(url=quest_url, params=params)
         return res.json()
 
-    def get_opml(self, access_token):
+    def get_user_subscriptions_opml(self, access_token):
         """
         return user subscriptions in opml format
         :param access_token:
@@ -111,6 +117,8 @@ class FeedlyClient(object):
         """
         return self.get_info_type(access_token, 'subscriptions')
 
+
+    ## FEEDS & ARTICLES
     def get_feed_content(self, access_token, streamId,
                          unreadOnly=None,
                          newerThan=None,
@@ -202,9 +210,21 @@ class FeedlyClient(object):
         request__url = self._get_endpoint("v3/entries/" + entryId)
         res = requests.get(url=request__url)
         return res.json()
-        def get_categories(self, access_token):
+    
+    def get_user_read(self, access_token, newerThan=None):
+        headers = {'Authorization': 'OAuth ' + access_token}
+        request__url = self._get_endpoint("v3/markers/reads")
+        params={}
+        if newerThan is not None:
+            params['newerThan'] = newerThan
+        res = requests.get(url=request__url, data=params, headers=headers)
+        return res.json()
+
+
+    # Categories
+    def get_categories(self, access_token):
         """
-        Returns the user's categories
+        Returns the user's categories 
         """
         headers = {'Authorization': 'OAuth ' + access_token}
         request__url = self._get_endpoint("v3/categories")
@@ -212,7 +232,7 @@ class FeedlyClient(object):
         return res.json()
 
     def get_sorted_categories(self,access_token):
-        """"
+        """
         Returns the user's categories in the same order as they appear in Feedly
         """
         headers = {'Authorization': 'OAuth ' + access_token}
@@ -241,6 +261,8 @@ class FeedlyClient(object):
         res = requests.delete(url=request__url, headers=headers)
         return res
 
+
+    # User preferences
     def get_user_preferences(self, access_token):
         """
         Get the preferences of the user. Preferences are application specific.
@@ -268,7 +290,7 @@ class FeedlyClient(object):
         res = requests.post(url=request__url, data=json.dumps(params), headers=headers)
         return res
 
-    def delete_user_preference(self, acces_token, pref):
+    def delete_user_preference(self, access_token, pref):
         """
         Delete a specific preference by assigning the special "==DELETE==" value.
         """
@@ -283,6 +305,8 @@ class FeedlyClient(object):
         res = requests.post(url=request__url, data=json.dumps(params), headers=headers)
         return res
     
+
+    ## GENERAL
     def _get_endpoint(self, path=None):
         """
         :param path:
@@ -292,7 +316,7 @@ class FeedlyClient(object):
         if path is not None:
             url += "/%s" % path
         return url
-
+    
     def _get_response(self, access_token, url_endpoint):
         headers = {'Authorization': 'OAuth ' + access_token}
         quest_url = self._get_endpoint(url_endpoint)
