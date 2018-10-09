@@ -11,7 +11,7 @@ if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload -r pypi')
     sys.exit()
 
-PACKAGE_VERSION = '1.1.0'
+PACKAGE_VERSION = '1.0.0'
 PACKAGE_DOWNLOAD_URL = ()
 
 
@@ -36,5 +36,4 @@ setup(name='python-feedly',
       description='Client for Feedly.com',
       url='https://github.com/WarmongeR1/python-feedly',
       include_package_data=True,
-      install_requires=['requests']
-      )
+      install_requires=['requests', ], )
