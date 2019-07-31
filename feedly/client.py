@@ -220,6 +220,22 @@ class FeedlyClient(object):
         res = requests.get(url=request__url, data=params, headers=headers)
         return res.json()
 
+    def get_unread_counts(self, access_token, streamId=None, newerThan=None, autorefresh=None):
+        """
+        Get the list of unread counts
+        """
+        headers = {'Authorization': 'OAuth ' + access_token}
+        request__url = self._get_endpoint("v3/markers/counts")
+        params = {}
+        if streamId is not None:
+            params['streamId'] = streamId
+        if newerThan is not None:
+            params['newerThan'] = newerThan
+        if autorefresh is not None:
+            params['autorefresh'] = autorefresh
+        res = requests.get(url=request__url, data=params, headers=headers)
+        return res.json()
+
 
     # Categories
     def get_categories(self, access_token):
